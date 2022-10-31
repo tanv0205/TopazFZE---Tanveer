@@ -1,0 +1,66 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills card-header-pills">
+      <li class="nav-item">
+        <button type="button" class="btn btn-primary" (click)="toggle()">Add Request</button>
+      </li>&nbsp;
+      <li class="nav-item">
+        <button type="button" class="btn btn-dark" (click)="toggle()">Active Requests</button>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="show" class="card-body">
+    <h5 class="card-title">Current Active Requests</h5>
+    <button class="btn btn-info btn-sm" (click)="refresh()"><i class="fa fa-retweet"></i></button>
+    <table class="table table-bordered table-striped" >
+      <thead>
+        <tr>
+          <th scope="col">SNo</th>
+          <th scope="col">Category</th>
+          <th scope="col">Sub Category</th>
+          <th scope="col">Description</th>
+          <th scope="col">Notes</th>
+          <th scope="col">Created On</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of savedRequests; let i = index">
+          <td>{{i+1}}</td>
+          <td>{{request.category}}</td>
+          <td>{{request.subCategory}}</td>
+          <td>{{request.description}}</td>
+          <td>{{request.notes}}</td>
+          <td>{{request.createdOn}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="!show" class="card-body">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Select a Category:</label>
+        <select class="form-control" (change)="onChange()" formControlName="category">
+          <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Select a Sub-Category:</label>
+        <select class="form-control" formControlName="subCategory">
+          <option *ngFor="let subCategory of subCategoriesFiltered" [value]="subCategory.id">{{subCategory.name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description:</label>
+        <textarea class="form-control" formControlName="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Notes:</label>&nbsp;
+        <app-notes (pushNotes)="receiveNotes($event)"></app-notes>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-outline-warning">Add</button>
+      </div>
+    </form>
+  </div>
+</div>
